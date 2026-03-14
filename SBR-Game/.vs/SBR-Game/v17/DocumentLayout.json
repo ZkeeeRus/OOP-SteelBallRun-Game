@@ -1,0 +1,36 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4C7678DE-FD5B-4A11-B5D0-BA49C728E774}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{4C7678DE-FD5B-4A11-B5D0-BA49C728E774}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Form1.cs",
+              "RelativeDocumentMoniker": "SBR-Game\\Form1.cs",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "RelativeToolTip": "SBR-Game\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T23:02:38.675Z",
+              "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
