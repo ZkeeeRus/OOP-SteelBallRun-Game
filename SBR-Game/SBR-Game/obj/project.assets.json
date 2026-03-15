@@ -453,7 +453,8 @@
   "projectFileDependencyGroups": {
     "net8.0-windows7.0": [
       "OpenTK >= 4.9.4",
-      "OpenTK.GLControl >= 4.0.2"
+      "OpenTK.GLControl >= 4.0.2",
+      "OpenTK.Mathematics >= 4.9.4"
     ]
   },
   "packageFolders": {
@@ -513,6 +514,10 @@
           "OpenTK.GLControl": {
             "target": "Package",
             "version": "[4.0.2, )"
+          },
+          "OpenTK.Mathematics": {
+            "target": "Package",
+            "version": "[4.9.4, )"
           }
         },
         "imports": [

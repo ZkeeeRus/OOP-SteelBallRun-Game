@@ -57,6 +57,10 @@
             "OpenTK.GLControl": {
               "target": "Package",
               "version": "[4.0.2, )"
+            },
+            "OpenTK.Mathematics": {
+              "target": "Package",
+              "version": "[4.9.4, )"
             }
           },
           "imports": [

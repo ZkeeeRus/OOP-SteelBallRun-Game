@@ -15,8 +15,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Content\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.9.4" />
     <PackageReference Include="OpenTK.GLControl" Version="4.0.2" />
+    <PackageReference Include="OpenTK.Mathematics" Version="4.9.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\Shaders\" />
   </ItemGroup>
 
 </Project>

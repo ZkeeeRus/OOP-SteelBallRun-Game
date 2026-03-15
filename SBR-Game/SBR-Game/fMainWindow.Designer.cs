@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fMainWindow));
             glControl = new OpenTK.GLControl.GLControl();
+            _updateTimer = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // glControl
@@ -43,14 +45,21 @@
             glControl.Name = "glControl";
             glControl.Profile = OpenTK.Windowing.Common.ContextProfile.Core;
             glControl.SharedContext = null;
-            glControl.Size = new Size(457, 305);
+            glControl.Size = new Size(749, 487);
             glControl.TabIndex = 0;
+            glControl.Load += glControl_Load;
+            glControl.Paint += glControl_Paint;
+            glControl.Resize += glControl_Resize;
+            // 
+            // _updateTimer
+            // 
+            _updateTimer.Interval = 16;
             // 
             // fMainWindow
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(457, 305);
+            ClientSize = new Size(749, 487);
             Controls.Add(glControl);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "fMainWindow";
@@ -62,5 +71,6 @@
         #endregion
 
         private OpenTK.GLControl.GLControl glControl;
+        private System.Windows.Forms.Timer _updateTimer;
     }
 }
