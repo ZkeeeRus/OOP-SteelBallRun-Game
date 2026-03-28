@@ -8,6 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <ApplicationIcon>800px-Steel_Ball_Infobox.ico</ApplicationIcon>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +29,15 @@
 
   <ItemGroup>
     <Folder Include="Content\Shaders\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Content\Shaders\fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Shaders\vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

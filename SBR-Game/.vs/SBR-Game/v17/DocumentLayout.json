@@ -3,19 +3,51 @@
   "WorkspaceRootPath": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\fmainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\fmainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\rendering\\renderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\rendering\\renderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\rendering\\scrollingbackground.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\rendering\\scrollingbackground.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\rendering\\shader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\rendering\\shader.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\fmainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\fmainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\rendering\\texture2d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\rendering\\texture2d.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\fmainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\content\\shaders\\vertex.glsl||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\content\\shaders\\vertex.glsl||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\content\\shaders\\fragment.glsl||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\content\\shaders\\fragment.glsl||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\rendering\\gameobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\rendering\\gameobject.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\rendering\\gameobjectfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\rendering\\gameobjectfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\rendering\\debugrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\rendering\\debugrenderer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|d:\\\u043A\u0443\u0440\u0441\u0430\u0447\\\u043A\u0443\u0440\u0441 2\\project\\oop-steelballrun-game\\sbr-game\\sbr-game\\rendering\\scalemode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\rendering\\scalemode.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\sbr-game\\fmainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{7D6CB87D-D068-4A4D-A79A-A053E205AB3F}|SBR-Game\\SBR-Game.csproj|solutionrelative:sbr-game\\fmainwindow.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     }
   ],
@@ -26,55 +58,149 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Renderer.cs",
               "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\Renderer.cs",
               "RelativeDocumentMoniker": "SBR-Game\\Rendering\\Renderer.cs",
               "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\Renderer.cs",
               "RelativeToolTip": "SBR-Game\\Rendering\\Renderer.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAowAsAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T23:51:26.675Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-17T13:01:56.321Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 11,
+              "Title": "fMainWindow.cs [Design]",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\fMainWindow.cs",
+              "RelativeDocumentMoniker": "SBR-Game\\fMainWindow.cs",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\fMainWindow.cs [Design]",
+              "RelativeToolTip": "SBR-Game\\fMainWindow.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:25:02.335Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ScrollingBackground.cs",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\ScrollingBackground.cs",
+              "RelativeDocumentMoniker": "SBR-Game\\Rendering\\ScrollingBackground.cs",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\ScrollingBackground.cs",
+              "RelativeToolTip": "SBR-Game\\Rendering\\ScrollingBackground.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAAAIwE8AAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:06:43.385Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ScaleMode.cs",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\ScaleMode.cs",
+              "RelativeDocumentMoniker": "SBR-Game\\Rendering\\ScaleMode.cs",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\ScaleMode.cs",
+              "RelativeToolTip": "SBR-Game\\Rendering\\ScaleMode.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T22:11:42.972Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "DebugRenderer.cs",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\DebugRenderer.cs",
+              "RelativeDocumentMoniker": "SBR-Game\\Rendering\\DebugRenderer.cs",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\DebugRenderer.cs",
+              "RelativeToolTip": "SBR-Game\\Rendering\\DebugRenderer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAPgAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T21:37:24.205Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "GameObjectFactory.cs",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\GameObjectFactory.cs",
+              "RelativeDocumentMoniker": "SBR-Game\\Rendering\\GameObjectFactory.cs",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\GameObjectFactory.cs",
+              "RelativeToolTip": "SBR-Game\\Rendering\\GameObjectFactory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T20:51:14.997Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "GameObject.cs",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\GameObject.cs",
+              "RelativeDocumentMoniker": "SBR-Game\\Rendering\\GameObject.cs",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\GameObject.cs",
+              "RelativeToolTip": "SBR-Game\\Rendering\\GameObject.cs",
+              "ViewState": "AgIAAC8AAAAAAAAAAAAswEkAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T20:50:54.787Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "fragment.glsl",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Content\\Shaders\\fragment.glsl",
+              "RelativeDocumentMoniker": "SBR-Game\\Content\\Shaders\\fragment.glsl",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Content\\Shaders\\fragment.glsl",
+              "RelativeToolTip": "SBR-Game\\Content\\Shaders\\fragment.glsl",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-03-16T20:40:42.504Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "vertex.glsl",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Content\\Shaders\\vertex.glsl",
+              "RelativeDocumentMoniker": "SBR-Game\\Content\\Shaders\\vertex.glsl",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Content\\Shaders\\vertex.glsl",
+              "RelativeToolTip": "SBR-Game\\Content\\Shaders\\vertex.glsl",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-03-16T20:40:36.489Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Texture2D.cs",
+              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\Texture2D.cs",
+              "RelativeDocumentMoniker": "SBR-Game\\Rendering\\Texture2D.cs",
+              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\Texture2D.cs",
+              "RelativeToolTip": "SBR-Game\\Rendering\\Texture2D.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEkAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-16T20:40:07.792Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Shader.cs",
               "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\Shader.cs",
               "RelativeDocumentMoniker": "SBR-Game\\Rendering\\Shader.cs",
               "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\Rendering\\Shader.cs",
               "RelativeToolTip": "SBR-Game\\Rendering\\Shader.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAADwvy8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAEIAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T23:51:16.228Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T23:51:16.228Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "fMainWindow.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
-              "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\fMainWindow.cs",
-              "RelativeDocumentMoniker": "SBR-Game\\fMainWindow.cs",
-              "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\fMainWindow.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
-              "RelativeToolTip": "SBR-Game\\fMainWindow.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T23:35:41.193Z",
-              "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "fMainWindow.cs",
               "DocumentMoniker": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\fMainWindow.cs",
               "RelativeDocumentMoniker": "SBR-Game\\fMainWindow.cs",
               "ToolTip": "D:\\\u041A\u0443\u0440\u0441\u0430\u0447\\\u041A\u0443\u0440\u0441 2\\project\\OOP-SteelBallRun-Game\\SBR-Game\\SBR-Game\\fMainWindow.cs",
               "RelativeToolTip": "SBR-Game\\fMainWindow.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACcAAAAAAAAAAAAowCwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-14T23:29:36.774Z",
               "EditorCaption": ""

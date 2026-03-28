@@ -61,6 +61,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(749, 487);
             Controls.Add(glControl);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "fMainWindow";
             StartPosition = FormStartPosition.CenterScreen;
