@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+using OpenTK.Mathematics;
+using System.Drawing;
 
 namespace SBR_Game.Rendering
 {
@@ -9,30 +10,20 @@ namespace SBR_Game.Rendering
         public float Width { get; set; }
         public float Height { get; set; }
         public ScaleMode ScaleMode { get; set; } = ScaleMode.Stretch;
-        public bool IsBackground { get; set; } = false;
-        public Vector2 TexCoordOffset { get; set; } = Vector2.Zero;
+        public Vector2 TexCoordMin { get; set; } = Vector2.Zero;
+        public Vector2 TexCoordMax { get; set; } = Vector2.One;
+        public Color Color { get; set; } = Color.White;
 
-        public GameObject(Texture2D texture)
-        {
-            Texture = texture;
-        }
+        public GameObject(Texture2D texture) => Texture = texture;
 
-        public void SetPosition(float x, float y)
-        {
-            Position = new Vector2(x, y);
-        }
-
-        public void Move(float dx, float dy)
-        {
-            Position = new Vector2(Position.X + dx, Position.Y + dy);
-        }
-
-        public void GetVertices(float screenWidth, float screenHeight, out float[] vertices, out uint[] indices)
+        public void GetVertices(
+            float viewportX, float viewportY,
+            float viewportWidth, float viewportHeight,
+            out float[] vertices, out uint[] indices)
         {
             float displayWidth = Width;
             float displayHeight = Height;
 
-            // KeepAspectRatio только если явно задан
             if (ScaleMode == ScaleMode.KeepAspectRatio && Texture != null)
             {
                 float texAspect = (float)Texture.Width / Texture.Height;
@@ -49,27 +40,21 @@ namespace SBR_Game.Rendering
                     displayWidth = Height * texAspect;
                 }
             }
-            // Stretch — используем Width/Height как есть, без изменений
 
             float halfW = displayWidth / 2f;
             float halfH = displayHeight / 2f;
 
-            float left = Position.X - halfW;
-            float right = Position.X + halfW;
-            float bottom = Position.Y - halfH;
-            float top = Position.Y + halfH;
-
-            float ndcLeft = (left / screenWidth) * 2f - 1f;
-            float ndcRight = (right / screenWidth) * 2f - 1f;
-            float ndcBottom = (bottom / screenHeight) * 2f - 1f;
-            float ndcTop = (top / screenHeight) * 2f - 1f;
+            float ndcLeft = ((Position.X - halfW - viewportX) / viewportWidth) * 2f - 1f;
+            float ndcRight = ((Position.X + halfW - viewportX) / viewportWidth) * 2f - 1f;
+            float ndcBottom = ((Position.Y - halfH - viewportY) / viewportHeight) * 2f - 1f;
+            float ndcTop = ((Position.Y + halfH - viewportY) / viewportHeight) * 2f - 1f;
 
             vertices = new float[]
             {
-        ndcRight, ndcTop,    0f,  1f, 0f,
-        ndcRight, ndcBottom, 0f,  1f, 1f,
-        ndcLeft,  ndcBottom, 0f,  0f, 1f,
-        ndcLeft,  ndcTop,    0f,  0f, 0f
+                ndcRight, ndcTop,    0f,  TexCoordMax.X, TexCoordMax.Y,
+                ndcRight, ndcBottom, 0f,  TexCoordMax.X, TexCoordMin.Y,
+                ndcLeft,  ndcBottom, 0f,  TexCoordMin.X, TexCoordMin.Y,
+                ndcLeft,  ndcTop,    0f,  TexCoordMin.X, TexCoordMax.Y
             };
             indices = new uint[] { 0, 1, 3, 1, 2, 3 };
         }

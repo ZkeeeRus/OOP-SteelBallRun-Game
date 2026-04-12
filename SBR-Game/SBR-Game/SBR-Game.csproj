@@ -7,12 +7,12 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <ApplicationIcon>800px-Steel_Ball_Infobox.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="800px-Steel_Ball_Infobox.ico" />
+    <Content Include="icon.ico" />
   </ItemGroup>
 
   <ItemGroup>

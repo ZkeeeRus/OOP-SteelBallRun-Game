@@ -1,0 +1,42 @@
+[
+    {
+        "Id": "speed_boost",
+        "DisplayName": "Speed Boost",
+        "IconPath": "Images/Bonuses/icon_speed.png",
+        "EffectSpritePath": "",
+        "Duration": 6.0,
+        "MaxSpeedMultiplier": 1.4,
+        "AccelerationMultiplier": 1.5,
+        "GrantsInvincibility": false
+    },
+    {
+        "Id": "invincibility",
+        "DisplayName": "Invincibility",
+        "IconPath": "Images/Bonuses/icon_shield.png",
+        "EffectSpritePath": "",
+        "Duration": 4.0,
+        "MaxSpeedMultiplier": 1.0,
+        "AccelerationMultiplier": 1.0,
+        "GrantsInvincibility": true
+    },
+    {
+        "Id": "max_speed_up",
+        "DisplayName": "Max Speed Up",
+        "IconPath": "Images/Bonuses/icon_maxspeed.png",
+        "EffectSpritePath": "",
+        "Duration": 8.0,
+        "MaxSpeedMultiplier": 1.6,
+        "AccelerationMultiplier": 1.0,
+        "GrantsInvincibility": false
+    },
+    {
+        "Id": "accel_boost",
+        "DisplayName": "Acceleration Boost",
+        "IconPath": "Images/Bonuses/icon_accel.png",
+        "EffectSpritePath": "",
+        "Duration": 7.0,
+        "MaxSpeedMultiplier": 1.0,
+        "AccelerationMultiplier": 2.0,
+        "GrantsInvincibility": false
+    }
+]

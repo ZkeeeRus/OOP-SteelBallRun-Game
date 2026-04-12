@@ -1,102 +1,99 @@
-﻿using OpenTK.Mathematics;
-using SBR_Game.Rendering;
+using OpenTK.Mathematics;
 
-public class ScrollingBackground : IDisposable
+namespace SBR_Game.Rendering
 {
-    private readonly List<Texture2D> _textures = new();
-    private Texture2D _currentTexture;
-    private Texture2D _nextTexture;
-    private float _offsetX = 0f;
-    private readonly Random _random = new();
-
-    // ✅ Переиспользуемые объекты — создаются один раз
-    private readonly GameObject _slideA;
-    private readonly GameObject _slideB;
-
-    public ScrollingBackground(string backgroundsPath)
+    public class ScrollingBackground : IDisposable
     {
-        var files = Directory.GetFiles(backgroundsPath, "*.png")
-            .Concat(Directory.GetFiles(backgroundsPath, "*.jpg"))
-            .ToArray();
+        private readonly List<Texture2D> _textures = new();
+        private readonly GameObject _slideA;
+        private readonly GameObject _slideB;
 
-        if (files.Length == 0)
-            throw new Exception($"No background images found in {backgroundsPath}");
-
-        foreach (var file in files)
-            _textures.Add(Texture2D.LoadFromFile(file));
-
-        _currentTexture = GetRandom(null);
-        _nextTexture = GetRandom(_currentTexture);
-
-        // ✅ Создаём объекты один раз — просто меняем их свойства каждый кадр
-        _slideA = new GameObject(_currentTexture) { ScaleMode = ScaleMode.Stretch };
-        _slideB = new GameObject(_nextTexture) { ScaleMode = ScaleMode.Stretch };
-    }
-
-    private Texture2D GetRandom(Texture2D? exclude)
-    {
-        if (_textures.Count == 1) return _textures[0];
-        Texture2D result;
-        do { result = _textures[_random.Next(_textures.Count)]; }
-        while (result == exclude);
-        return result;
-    }
-
-    public void Scroll(float deltaPixels)
-    {
-        _offsetX += deltaPixels;
-    }
-
-    public (GameObject current, GameObject next) GetSlides(float screenWidth, float screenHeight)
-    {
-        float texAspect = (float)_currentTexture.Width / _currentTexture.Height;
-        float slideHeight = screenHeight;
-        float slideWidth = slideHeight * texAspect;
-
-        if (slideWidth < screenWidth)
+        public ScrollingBackground(string backgroundsPath)
         {
-            slideWidth = screenWidth;
-            slideHeight = screenWidth / texAspect;
+            var files = Directory.GetFiles(backgroundsPath, "*.png")
+                .Concat(Directory.GetFiles(backgroundsPath, "*.jpg"))
+                .ToArray();
+
+            if (files.Length == 0)
+                throw new Exception($"No background images found in {backgroundsPath}");
+
+            foreach (var file in files)
+                _textures.Add(Texture2D.LoadFromFile(file));
+
+            _slideA = new GameObject(_textures[0]) { ScaleMode = ScaleMode.Stretch };
+            _slideB = new GameObject(_textures[0]) { ScaleMode = ScaleMode.Stretch };
         }
 
-        float normalized = _offsetX % slideWidth;
-        if (normalized < 0) normalized += slideWidth;
-
-        // Смена фонов когда слайд полностью ушёл
-        if (_offsetX != 0 && normalized < 1f)
+        public float GetSlideWidth(float screenWidth, float screenHeight)
         {
-            _currentTexture = _nextTexture;
-            _nextTexture = GetRandom(_currentTexture);
+            ComputeSlideLayout(screenWidth, screenHeight, _textures[0], out float slideWidth, out _);
+            return slideWidth;
         }
 
-        float x1 = slideWidth / 2f - normalized;
-        float x2 = x1 + slideWidth;
+        public (GameObject current, GameObject next) GetSlides(
+            float viewportX, float viewportY,
+            float screenWidth, float screenHeight,
+            float cameraWorldX,
+            float texVMin = 0f, float texVMax = 1f)
+        {
+            ComputeSlideLayout(screenWidth, screenHeight, _textures[0], out float slideWidth, out float slideHeight);
 
-        // ✅ Выравниваем по низу
-        float cy = screenHeight - slideHeight / 2f;
+            float normalized = cameraWorldX % slideWidth;
+            if (normalized < 0) normalized += slideWidth;
 
-        // ✅ Обновляем свойства существующих объектов
-        _slideA.Texture = _currentTexture;
-        _slideA.Position = new Vector2(x1, cy);
-        _slideA.Width = slideWidth;
-        _slideA.Height = slideHeight;
+            int tileIndex = (int)Math.Floor((double)cameraWorldX / slideWidth);
+            float x1 = slideWidth / 2f - normalized;
+            float x2 = x1 + slideWidth;
+            float cy = viewportY + screenHeight / 2f;
 
-        _slideB.Texture = _nextTexture;
-        _slideB.Position = new Vector2(x2, cy);
-        _slideB.Width = slideWidth;
-        _slideB.Height = slideHeight;
+            ConfigureSlide(_slideA, TextureAt(tileIndex), x1, cy, slideWidth, slideHeight, texVMin, texVMax);
+            ConfigureSlide(_slideB, TextureAt(tileIndex + 1), x2, cy, slideWidth, slideHeight, texVMin, texVMax);
 
-        return (_slideA, _slideB);
-    }
+            return (_slideA, _slideB);
+        }
 
-    public void DebugBindTexture()
-    {
-        _currentTexture.Use();
-    }
+        private static void ConfigureSlide(
+            GameObject slide, Texture2D tex,
+            float x, float y, float w, float h,
+            float texVMin, float texVMax)
+        {
+            slide.Texture = tex;
+            slide.Position = new Vector2(x, y);
+            slide.Width = w;
+            slide.Height = h;
+            slide.TexCoordMin = new Vector2(0f, texVMin);
+            slide.TexCoordMax = new Vector2(1f, texVMax);
+        }
 
-    public void Dispose()
-    {
-        foreach (var t in _textures)
-            t.Dispose();
+        private static void ComputeSlideLayout(
+            float screenWidth, float screenHeight, Texture2D tex,
+            out float slideWidth, out float slideHeight)
+        {
+            float texAspect = (float)tex.Width / tex.Height;
+            slideHeight = screenHeight;
+            slideWidth = slideHeight * texAspect;
+
+            if (slideWidth < screenWidth)
+            {
+                slideWidth = screenWidth;
+                slideHeight = screenWidth / texAspect;
+            }
+        }
+
+        private Texture2D TextureAt(int tileIndex)
+        {
+            int n = _textures.Count;
+            return _textures[((tileIndex % n) + n) % n];
+        }
+
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+            foreach (var t in _textures)
+                t.Dispose();
+        }
     }
 }

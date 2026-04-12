@@ -1,4 +1,4 @@
-﻿namespace SBR_Game.Rendering
+namespace SBR_Game.Rendering
 {
     public enum ScaleMode
     {

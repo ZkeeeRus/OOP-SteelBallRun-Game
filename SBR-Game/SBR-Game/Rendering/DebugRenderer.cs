@@ -1,5 +1,4 @@
-﻿using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
+using OpenTK.Graphics.OpenGL4;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
@@ -10,93 +9,48 @@ namespace SBR_Game.Rendering
         [DllImport("user32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
 
-        private const float DebounceTime = 200f;
+        private const float DebounceMs = 200f;
         private const int LineHeight = 25;
         private const int Margin = 10;
 
-        private bool _showFps;
-        private bool _showInfo;
-        private bool _showPolygons;
+        private bool _showFps, _showInfo, _showPolygons;
         private int _frameCount;
-        private float _fps;
         private float _fpsTimer;
         private string _fpsText = "FPS: 0";
         private string _infoText = "";
 
-        private int _vao;
-        private int _vbo;
-        private int _ebo;
-        private int _lineVao;
-        private int _lineVbo;
-        private Shader _shader;
-        private Shader _lineShader;
+        private float _lastF1, _lastF2, _lastF3;
+
+        private Shader _textShader = null!;
+        private Shader _lineShader = null!;
+        private int _textVao, _textVbo, _textEbo;
+        private int _lineVao, _lineVbo;
         private bool _initialized;
 
-        private float _lastF1Time;
-        private float _lastF2Time;
-        private float _lastF3Time;
-
-        public bool ShowFps { get; set; }
-        public bool ShowInfo { get; set; }
-        public bool ShowPolygons { get; set; }
 
         public void Initialize()
         {
-            // ✅ НЕ грузи vertex.glsl/fragment.glsl здесь — это шейдер рендерера
-            // _shader = new Shader(Path.Combine(basePath, "vertex.glsl"), ...);  <-- УБЕРИ
+            _textShader = new Shader(
+                "#version 330 core\nlayout(location=0)in vec3 aPosition;\nlayout(location=1)in vec2 aTexCoord;\nout vec2 vTexCoord;\nvoid main(){vTexCoord=aTexCoord;gl_Position=vec4(aPosition,1.0);}",
+                "#version 330 core\nin vec2 vTexCoord;\nuniform sampler2D uTexture;\nout vec4 FragColor;\nvoid main(){FragColor=texture(uTexture,vTexCoord);}",
+                fromMemory: true);
 
-            // Для текста дебаггера нужен отдельный простой шейдер:
-            string textVertexSource = @"
-        #version 330 core
-        layout (location = 0) in vec3 aPosition;
-        layout (location = 1) in vec2 aTexCoord;
-        out vec2 vTexCoord;
-        void main() {
-            vTexCoord = aTexCoord;
-            gl_Position = vec4(aPosition, 1.0);
-        }";
+            _lineShader = new Shader(
+                "#version 330 core\nlayout(location=0)in vec3 aPosition;\nvoid main(){gl_Position=vec4(aPosition,1.0);}",
+                "#version 330 core\nout vec4 FragColor;\nuniform vec4 uColor;\nvoid main(){FragColor=uColor;}",
+                fromMemory: true);
 
-            string textFragmentSource = @"
-        #version 330 core
-        in vec2 vTexCoord;
-        uniform sampler2D uTexture;
-        out vec4 FragColor;
-        void main() {
-            FragColor = texture(uTexture, vTexCoord);
-        }";
+            InitTexturedBuffer(ref _textVao, ref _textVbo, ref _textEbo);
+            InitLineBuffer(ref _lineVao, ref _lineVbo);
 
-            _shader = new Shader(textVertexSource, textFragmentSource, fromMemory: true);
+            _initialized = true;
+        }
 
-            // Устанавливаем uTexture = 0 сразу
-            _shader.Use();
-            int texLoc = GL.GetUniformLocation(_shader.Handle, "uTexture");
-            GL.Uniform1(texLoc, 0);
-
-            // Линейный шейдер для wireframe — без изменений
-            string lineVertexSource = @"
-        #version 330 core
-        layout (location = 0) in vec3 aPosition;
-        void main() {
-            gl_Position = vec4(aPosition, 1.0);
-        }";
-
-            string lineFragmentSource = @"
-        #version 330 core
-        out vec4 FragColor;
-        uniform vec4 uColor;
-        void main() {
-            FragColor = uColor;
-        }";
-
-            _lineShader = new Shader(lineVertexSource, lineFragmentSource, fromMemory: true);
-
-            // VAO/VBO инициализация — без изменений
-            _vao = GL.GenVertexArray();
-            GL.BindVertexArray(_vao);
-            _vbo = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
-            _ebo = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _ebo);
+        private static void InitTexturedBuffer(ref int vao, ref int vbo, ref int ebo)
+        {
+            vao = GL.GenVertexArray(); GL.BindVertexArray(vao);
+            vbo = GL.GenBuffer(); GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            ebo = GL.GenBuffer(); GL.BindBuffer(BufferTarget.ElementArrayBuffer, ebo);
 
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
@@ -105,18 +59,20 @@ namespace SBR_Game.Rendering
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
+        }
 
-            _lineVao = GL.GenVertexArray();
-            GL.BindVertexArray(_lineVao);
-            _lineVbo = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _lineVbo);
+        private static void InitLineBuffer(ref int vao, ref int vbo)
+        {
+            vao = GL.GenVertexArray(); GL.BindVertexArray(vao);
+            vbo = GL.GenBuffer(); GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
+
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
-
-            _initialized = true;
         }
+
 
         public void Update(float deltaTime, int objectCount, int vertexCount)
         {
@@ -125,148 +81,118 @@ namespace SBR_Game.Rendering
 
             if (_fpsTimer >= 1f)
             {
-                _fps = _frameCount / _fpsTimer;
-                _fpsText = $"FPS: {_fps:F1}";
+                _fpsText = $"FPS: {_frameCount / _fpsTimer:F1}";
                 _frameCount = 0;
                 _fpsTimer = 0f;
             }
 
             _infoText = $"Objects: {objectCount} | Vertices: {vertexCount}";
-
             HandleInput(deltaTime);
         }
 
         private void HandleInput(float deltaTime)
         {
-            _lastF1Time += deltaTime * 1000;
-            _lastF2Time += deltaTime * 1000;
-            _lastF3Time += deltaTime * 1000;
+            float ms = deltaTime * 1000f;
+            _lastF1 += ms; _lastF2 += ms; _lastF3 += ms;
 
-            if ((GetAsyncKeyState((int)Keys.F1) & 0x8000) != 0 && _lastF1Time >= DebounceTime)
-            {
-                _showPolygons = !_showPolygons;
-                _lastF1Time = 0;
-            }
-
-            if ((GetAsyncKeyState((int)Keys.F2) & 0x8000) != 0 && _lastF2Time >= DebounceTime)
-            {
-                _showFps = !_showFps;
-                _lastF2Time = 0;
-            }
-
-            if ((GetAsyncKeyState((int)Keys.F3) & 0x8000) != 0 && _lastF3Time >= DebounceTime)
-            {
-                _showInfo = !_showInfo;
-                _lastF3Time = 0;
-            }
+            if (IsKeyDown(Keys.F1) && _lastF1 >= DebounceMs) { _showPolygons = !_showPolygons; _lastF1 = 0; }
+            if (IsKeyDown(Keys.F2) && _lastF2 >= DebounceMs) { _showFps = !_showFps; _lastF2 = 0; }
+            if (IsKeyDown(Keys.F3) && _lastF3 >= DebounceMs) { _showInfo = !_showInfo; _lastF3 = 0; }
         }
 
-        public void Render(float screenWidth, float screenHeight, List<GameObject> objects)
+        private static bool IsKeyDown(Keys key) => (GetAsyncKeyState((int)key) & 0x8000) != 0;
+
+
+        public void Render(float screenWidth, float screenHeight, List<GameObject> objects) => Render(0, 0, screenWidth, screenHeight, objects);
+
+        public void Render(float vx, float vy, float vw, float vh, List<GameObject> objects)
         {
-            if (!_initialized) return;
+            if (!_initialized || _disposed) return;
 
-            if (_showPolygons)
-                RenderPolygons(objects, screenWidth, screenHeight);
-
-            if (_showFps || _showInfo)
-                RenderText(screenWidth, screenHeight);
-        }
-
-        private void RenderPolygons(List<GameObject> objects, float screenWidth, float screenHeight)
-        {
-            // ✅ Убрали GL.Disable/Enable DepthTest
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
+            if (_showPolygons) RenderPolygons(objects, vx, vy, vw, vh);
+            if (_showFps || _showInfo) RenderText(vw, vh);
+        }
+
+
+        private void RenderPolygons(List<GameObject> objects, float vx, float vy, float vw, float vh)
+        {
+            _lineShader.Use();
             GL.BindVertexArray(_lineVao);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _lineVbo);
 
             foreach (var obj in objects)
             {
-                obj.GetVertices(screenWidth, screenHeight, out float[] vertices, out _);
+                obj.GetVertices(vx, vy, vw, vh, out float[] vertices, out _);
 
-                float[] positions = new float[12];
+                float[] p = new float[12];
                 for (int i = 0; i < 4; i++)
                 {
-                    positions[i * 3 + 0] = vertices[i * 5 + 0];
-                    positions[i * 3 + 1] = vertices[i * 5 + 1];
-                    positions[i * 3 + 2] = vertices[i * 5 + 2];
+                    p[i * 3] = vertices[i * 5];
+                    p[i * 3 + 1] = vertices[i * 5 + 1];
+                    p[i * 3 + 2] = vertices[i * 5 + 2];
                 }
 
-                DrawTriangleWireframe(positions, Color.Red);
-                DrawBoundingBox(obj, screenWidth, screenHeight, Color.Lime);
+                DrawTriangleWireframe(p, Color.Red);
+                DrawBoundingBox(obj, vx, vy, vw, vh, Color.Lime);
             }
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
-        }   
-
-        private void DrawTriangleWireframe(float[] positions, Color color)
-        {
-            _lineShader.Use();
-            _lineShader.SetColor("uColor", color);
-
-            float[] tri1 = [
-                positions[0], positions[1], positions[2],
-                positions[3], positions[4], positions[5],
-                positions[3], positions[4], positions[5],
-                positions[9], positions[10], positions[11],
-                positions[9], positions[10], positions[11],
-                positions[0], positions[1], positions[2]
-            ];
-
-            float[] tri2 = [
-                positions[3], positions[4], positions[5],
-                positions[6], positions[7], positions[8],
-                positions[6], positions[7], positions[8],
-                positions[9], positions[10], positions[11],
-                positions[9], positions[10], positions[11],
-                positions[3], positions[4], positions[5]
-            ];
-
-            GL.BufferData(BufferTarget.ArrayBuffer, tri1.Length * sizeof(float), tri1, BufferUsageHint.DynamicDraw);
-            GL.DrawArrays(PrimitiveType.Lines, 0, 6);
-
-            GL.BufferData(BufferTarget.ArrayBuffer, tri2.Length * sizeof(float), tri2, BufferUsageHint.DynamicDraw);
-            GL.DrawArrays(PrimitiveType.Lines, 0, 6);
         }
 
-        private void DrawBoundingBox(GameObject obj, float screenWidth, float screenHeight, Color color)
+        private void DrawTriangleWireframe(float[] p, Color color)
         {
-            _lineShader.Use();
+            _lineShader.SetColor("uColor", color);
+            // Two triangles: (0,1,3) and (1,2,3) – each drawn as a loop
+            DrawLineLoop(p[0], p[1], p[2], p[3], p[4], p[5], p[9], p[10], p[11]);
+            DrawLineLoop(p[3], p[4], p[5], p[6], p[7], p[8], p[9], p[10], p[11]);
+        }
+
+        private void DrawLineLoop(
+            float x0, float y0, float z0,
+            float x1, float y1, float z1,
+            float x2, float y2, float z2)
+        {
+            DrawLines(new float[]
+            {
+                x0, y0, z0,  x1, y1, z1,
+                x1, y1, z1,  x2, y2, z2,
+                x2, y2, z2,  x0, y0, z0
+            });
+        }
+
+        private void DrawBoundingBox(GameObject obj, float vx, float vy, float vw, float vh, Color color)
+        {
             _lineShader.SetColor("uColor", color);
 
-            float halfWidth = obj.Width / 2f;
-            float halfHeight = obj.Height / 2f;
+            float halfW = obj.Width / 2f;
+            float halfH = obj.Height / 2f;
 
-            // ✅ Правильная формула — та же что в GetVertices
-            float ndcLeft = ((obj.Position.X - halfWidth) / screenWidth) * 2f - 1f;
-            float ndcRight = ((obj.Position.X + halfWidth) / screenWidth) * 2f - 1f;
-            float ndcBottom = ((obj.Position.Y - halfHeight) / screenHeight) * 2f - 1f;
-            float ndcTop = ((obj.Position.Y + halfHeight) / screenHeight) * 2f - 1f;
+            float ndcL = ((obj.Position.X - halfW - vx) / vw) * 2f - 1f;
+            float ndcR = ((obj.Position.X + halfW - vx) / vw) * 2f - 1f;
+            float ndcB = ((obj.Position.Y - halfH - vy) / vh) * 2f - 1f;
+            float ndcT = ((obj.Position.Y + halfH - vy) / vh) * 2f - 1f;
 
-            float[] rect =
-            [
-                ndcLeft,  ndcTop,    0f,
-        ndcRight, ndcTop,    0f,
-        ndcRight, ndcTop,    0f,
-        ndcRight, ndcBottom, 0f,
-        ndcRight, ndcBottom, 0f,
-        ndcLeft,  ndcBottom, 0f,
-        ndcLeft,  ndcBottom, 0f,
-        ndcLeft,  ndcTop,    0f
-            ];
+            DrawLines(new float[]
+            {
+                ndcL, ndcT, 0f,  ndcR, ndcT, 0f,
+                ndcR, ndcT, 0f,  ndcR, ndcB, 0f,
+                ndcR, ndcB, 0f,  ndcL, ndcB, 0f,
+                ndcL, ndcB, 0f,  ndcL, ndcT, 0f
+            });
+        }
 
-            GL.BufferData(BufferTarget.ArrayBuffer, rect.Length * sizeof(float), rect, BufferUsageHint.DynamicDraw);
-            GL.DrawArrays(PrimitiveType.Lines, 0, 8);
+        private void DrawLines(float[] data)
+        {
+            GL.BufferData(BufferTarget.ArrayBuffer, data.Length * sizeof(float), data, BufferUsageHint.DynamicDraw);
+            GL.DrawArrays(PrimitiveType.Lines, 0, data.Length / 3);
         }
 
         private void RenderText(float screenWidth, float screenHeight)
         {
-            // ✅ Убрали GL.Disable/Enable DepthTest
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-
             int yOffset = Margin;
 
             if (_showFps)
@@ -274,74 +200,82 @@ namespace SBR_Game.Rendering
                 DrawText(_fpsText, Margin, yOffset, Color.Lime, screenWidth, screenHeight);
                 yOffset += LineHeight;
             }
-
             if (_showInfo)
                 DrawText(_infoText, Margin, yOffset, Color.Yellow, screenWidth, screenHeight);
         }
 
-        private void DrawText(string text, int x, int y, Color color, float screenWidth, float screenHeight)
+        public void DrawText(string text, int x, int y, Color color, float screenWidth, float screenHeight)
         {
-            using var bitmap = new Bitmap(1, 1);
-            using var g = Graphics.FromImage(bitmap);
+            if (_disposed) return;
             using var font = new Font("Arial", 16, FontStyle.Bold);
-            var size = g.MeasureString(text, font);
 
-            int width = (int)Math.Ceiling(size.Width);
-            int height = (int)Math.Ceiling(size.Height);
+            SizeF size;
+            using (var tmpBmp = new Bitmap(1, 1))
+            using (var mg = Graphics.FromImage(tmpBmp))
+                size = mg.MeasureString(text, font);
 
-            using var textureBitmap = new Bitmap(width, height);
-            using var tg = Graphics.FromImage(textureBitmap);
-            tg.Clear(Color.Transparent);
-            tg.DrawString(text, font, new SolidBrush(color), 0, 0);
+            int w = (int)Math.Ceiling(size.Width);
+            int h = (int)Math.Ceiling(size.Height);
 
-            var data = textureBitmap.LockBits(
-                new Rectangle(0, 0, width, height),
+            using var bmp = new Bitmap(w, h);
+            using (var g = Graphics.FromImage(bmp))
+            {
+                g.Clear(Color.Transparent);
+                g.DrawString(text, font, new SolidBrush(color), 0, 0);
+            }
+
+            var imgData = bmp.LockBits(
+                new Rectangle(0, 0, w, h),
                 System.Drawing.Imaging.ImageLockMode.ReadOnly,
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            int texture = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, texture);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0,
-                PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
-            textureBitmap.UnlockBits(data);
+            int tex = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, tex);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
+                w, h, 0, PixelFormat.Bgra, PixelType.UnsignedByte, imgData.Scan0);
+            bmp.UnlockBits(imgData);
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
-            float ndcLeft = (x / (screenWidth / 2f)) - 1f;
-            float ndcRight = ((x + width) / (screenWidth / 2f)) - 1f;
-            float ndcBottom = (y / (screenHeight / 2f)) - 1f;
-            float ndcTop = ((y + height) / (screenHeight / 2f)) - 1f;
+            float ndcL = (x / (screenWidth / 2f)) - 1f;
+            float ndcR = ((x + w) / (screenWidth / 2f)) - 1f;
+            float ndcT = 1f - (y / (screenHeight / 2f));
+            float ndcB = 1f - ((y + h) / (screenHeight / 2f));
 
-            float[] vertices = [
-                ndcRight, ndcTop,    0.0f,  1.0f, 0.0f,
-                ndcRight, ndcBottom, 0.0f,  1.0f, 1.0f,
-                ndcLeft,  ndcBottom, 0.0f,  0.0f, 1.0f,
-                ndcLeft,  ndcTop,    0.0f,  0.0f, 0.0f
-            ];
+            float[] vertices =
+            {
+                ndcR, ndcT,    0f, 1f, 0f,
+                ndcR, ndcB,    0f, 1f, 1f,
+                ndcL, ndcB,    0f, 0f, 1f,
+                ndcL, ndcT,    0f, 0f, 0f
+            };
+            uint[] indices = { 0, 1, 3, 1, 2, 3 };
 
-            uint[] indices = [0, 1, 3, 1, 2, 3];
+            GL.BindVertexArray(_textVao);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _textVbo);
+            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StreamDraw);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _textEbo);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StreamDraw);
 
-            GL.BindVertexArray(_vao);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _ebo);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-
-            _shader.Use();
+            _textShader.Use();
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, texture);
+            GL.BindTexture(TextureTarget.Texture2D, tex);
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);
 
-            GL.DeleteTexture(texture);
+            GL.DeleteTexture(tex);
         }
+
+        private bool _disposed;
 
         public void Dispose()
         {
-            GL.DeleteBuffer(_vbo);
-            GL.DeleteBuffer(_ebo);
-            GL.DeleteVertexArray(_vao);
+            if (_disposed) return;
+            _disposed = true;
+            GL.DeleteBuffer(_textVbo);
+            GL.DeleteBuffer(_textEbo);
+            GL.DeleteVertexArray(_textVao);
             GL.DeleteBuffer(_lineVbo);
             GL.DeleteVertexArray(_lineVao);
         }
