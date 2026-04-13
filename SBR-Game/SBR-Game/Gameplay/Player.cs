@@ -19,8 +19,7 @@ namespace SBR_Game.Gameplay
             Jump = Load(folderPath, $"{prefix}_jump.png");
         }
 
-        private static Texture2D Load(string folder, string file)
-            => Texture2D.LoadFromFile(Path.Combine(folder, file));
+        private static Texture2D Load(string folder, string file) => Texture2D.LoadFromFile(Path.Combine(folder, file));
 
         private bool _disposed;
 
@@ -110,14 +109,11 @@ namespace SBR_Game.Gameplay
         }
 
 
-        public void Accelerate(float acceleration, float maxSpeed, float dt)
-            => Speed = Math.Min(maxSpeed, Speed + acceleration * dt);
+        public void Accelerate(float acceleration, float maxSpeed, float dt) => Speed = Math.Min(maxSpeed, Speed + acceleration * dt);
 
-        public void ApplySlowdown(float factor, float minSpeed)
-            => Speed = Math.Max(minSpeed, Speed * factor);
+        public void ApplySlowdown(float factor, float minSpeed) => Speed = Math.Max(minSpeed, Speed * factor);
 
-        public void Advance(float dt)
-            => WorldX += Speed * dt;
+        public void Advance(float dt) => WorldX += Speed * dt;
 
 
         public void TryJump(float duration)

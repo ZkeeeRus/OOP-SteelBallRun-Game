@@ -382,15 +382,12 @@ namespace SBR_Game
             {
                 if (bonus.EffectSprite == null) continue;
 
-                float ex = playerScreenPos.X - state.Player.Width * 0.6f;
-                float ey = playerScreenPos.Y;
-
                 var effectObj = new GameObject(bonus.EffectSprite)
                 {
-                    Position = new Vector2(ex, ey),
-                    Width = state.Player.Width * 0.7f,
-                    Height = state.Player.Height * 0.9f,
-                    ScaleMode = ScaleMode.Stretch
+                    Position = new Vector2(playerScreenPos.X, playerScreenPos.Y),
+                    Width = state.Player.Width,
+                    Height = state.Player.Height,
+                    ScaleMode = ScaleMode.KeepAspectRatio
                 };
                 list.Add(effectObj);
             }
