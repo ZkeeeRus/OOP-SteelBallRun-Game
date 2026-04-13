@@ -22,12 +22,12 @@ namespace SBR_Game.UI
         {
             DrawPlayerBlock(debug, screenWidth, screenHeight,
                 MarginX, MarginY,
-                "Gyro [W for jump]", p1Distance, p1Score, P1Color, goalDistance);
+                "Джайро [W - прыжок]", p1Distance, p1Score, P1Color, goalDistance);
 
             int bottomY = (int)(screenHeight - MarginY - LineStep * 2 - 10);
             DrawPlayerBlock(debug, screenWidth, screenHeight,
                 MarginX, bottomY,
-                "Johhny [↑ for jump]", p2Distance, p2Score, P2Color, goalDistance);
+                "Джонни [↑ - прыжок]", p2Distance, p2Score, P2Color, goalDistance);
         }
 
         private static void DrawPlayerBlock(
@@ -36,14 +36,14 @@ namespace SBR_Game.UI
             string label, float distance, int score,
             Color color, float? goalDistance)
         {
-            string distText = $"{label}  {distance / 1000f:F2} km";
+            string distText = $"{label}  {distance / 1000f:F2} км.";
             if (goalDistance.HasValue && goalDistance.Value > 0)
             {
                 float pct = Math.Clamp(distance / goalDistance.Value * 100f, 0f, 100f);
                 distText += $"  ({pct:F0}%)";
             }
 
-            string scoreText = $"Score: {score}";
+            string scoreText = $"Очки: {score}";
 
             debug.DrawText(distText, x + 1, y + 1, ShadowColor, sw, sh);
             debug.DrawText(scoreText, x + 1, y + LineStep + 1, ShadowColor, sw, sh);

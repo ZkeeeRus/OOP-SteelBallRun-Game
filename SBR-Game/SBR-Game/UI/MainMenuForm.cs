@@ -29,7 +29,7 @@ namespace SBR_Game.UI
 
         private void BuildTitle()
         {
-            _lblTitle.Text = "SBR";
+            _lblTitle.Text = "Скачки";
             _lblTitle.Font = new Font("Segoe UI", 96, FontStyle.Bold, GraphicsUnit.Pixel);
             _lblTitle.ForeColor = Color.FromArgb(64, 196, 255);
             _lblTitle.AutoSize = true;
@@ -47,8 +47,8 @@ namespace SBR_Game.UI
 
         private void BuildButtons()
         {
-            StyleButton(_btnPlay, "PLAY", Color.FromArgb(64, 196, 255));
-            StyleButton(_btnQuit, "QUIT", Color.FromArgb(255, 80, 60));
+            StyleButton(_btnPlay, "ИГРАТЬ", Color.FromArgb(64, 196, 255));
+            StyleButton(_btnQuit, "ВЫЙТИ", Color.FromArgb(255, 80, 60));
 
             _btnPlay.Click += (_, _) => PlayRequested?.Invoke();
             _btnQuit.Click += (_, _) => Application.Exit();

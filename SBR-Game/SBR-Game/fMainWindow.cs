@@ -1,3 +1,4 @@
+
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using SBR_Game.Core;
@@ -264,14 +265,14 @@ namespace SBR_Game
             s1.Player.Position = new Vector2(sx1, yTop + s1.Player.JumpYOffset);
             s2.Player.Position = new Vector2(sx2, yBot + s2.Player.JumpYOffset);
 
-            SetObstaclePositions(s1, yTop, W);
-            SetObstaclePositions(s2, yBot, W);
+            SetObstaclePositions(s1, yTop, avgWorldX, W);
+            SetObstaclePositions(s2, yBot, avgWorldX, W);
 
             _renderer.Render(new List<GameObject> { s1.Player, s2.Player });
             RenderObstacles(s1.Obstacles);
             RenderObstacles(s2.Obstacles);
-            RenderBonusPickups(s1, yTop + GameLogic.BonusLaneYOffset, W, 0, 0, W, H);
-            RenderBonusPickups(s2, yBot + GameLogic.BonusLaneYOffset, W, 0, 0, W, H);
+            RenderBonusPickups(s1, yTop + GameLogic.BonusLaneYOffset, avgWorldX, W, 0, 0, W, H);
+            RenderBonusPickups(s2, yBot + GameLogic.BonusLaneYOffset, avgWorldX, W, 0, 0, W, H);
             RenderBonusEffects(s1, s1.Player.Position, 0, 0, W, H);
             RenderBonusEffects(s2, s2.Player.Position, 0, 0, W, H);
 
@@ -294,10 +295,10 @@ namespace SBR_Game
             s1.Player.Position = new Vector2(pScrX, p1Y + s1.Player.JumpYOffset);
             var (bg1a, bg1b) = _scrollingBg.GetSlides(0, h2, W, h2, cam1, SplitBgTexVMin, SplitBgTexVMax);
             _renderer.Render(new List<GameObject> { bg1a, bg1b }, 0, h2, W, h2);
-            SetObstaclePositions(s1, p1Y, W);
+            SetObstaclePositions(s1, p1Y, s1.Player.WorldX, W);
             _renderer.Render(new List<GameObject> { s1.Player }, 0, h2, W, h2);
             RenderObstacles(s1.Obstacles, 0, h2, W, h2);
-            RenderBonusPickups(s1, p1Y + GameLogic.BonusLaneYOffset, W, 0, h2, W, h2);
+            RenderBonusPickups(s1, p1Y + GameLogic.BonusLaneYOffset, s1.Player.WorldX, W, 0, h2, W, h2);
             RenderBonusEffects(s1, s1.Player.Position, 0, h2, W, h2);
 
             // Bottom half – player 2
@@ -305,24 +306,25 @@ namespace SBR_Game
             s2.Player.Position = new Vector2(pScrX, p2Y + s2.Player.JumpYOffset);
             var (bg2a, bg2b) = _scrollingBg.GetSlides(0, 0, W, h2, cam2, SplitBgTexVMin, SplitBgTexVMax);
             _renderer.Render(new List<GameObject> { bg2a, bg2b }, 0, 0, W, h2);
-            SetObstaclePositions(s2, p2Y, W);
+            SetObstaclePositions(s2, p2Y, s2.Player.WorldX, W);
             _renderer.Render(new List<GameObject> { s2.Player }, 0, 0, W, h2);
             RenderObstacles(s2.Obstacles, 0, 0, W, h2);
-            RenderBonusPickups(s2, p2Y + GameLogic.BonusLaneYOffset, W, 0, 0, W, h2);
+            RenderBonusPickups(s2, p2Y + GameLogic.BonusLaneYOffset, s2.Player.WorldX, W, 0, 0, W, h2);
             RenderBonusEffects(s2, s2.Player.Position, 0, 0, W, h2);
 
             SetWarningPosition(s1.Warning, pScrX, p1Y, W);
             SetWarningPosition(s2.Warning, pScrX, p2Y, W);
-            RenderWarnings(0, h2, W, h2);
+            RenderWarnings(0, h2, W, h2, _logic.State1.Warning);
+            RenderWarnings(0, 0, W, h2, _logic.State2.Warning);
         }
 
 
-        private void SetObstaclePositions(PlayerState state, float playerScreenY, float screenWidth)
+        private void SetObstaclePositions(PlayerState state, float playerScreenY, float avgWorldX, float screenWidth)
         {
             float pScrX = screenWidth * GameLogic.PlayerScreenAnchorX;
             foreach (var obs in state.Obstacles)
                 obs.Position = new Vector2(
-                    pScrX + (obs.WorldX - state.Player.WorldX),
+                    pScrX + (obs.WorldX - avgWorldX),
                     playerScreenY);
         }
 
@@ -344,17 +346,24 @@ namespace SBR_Game
                 _renderer.Render(list);
         }
 
-        private void RenderWarnings(int vx, int vy, int vw, int vh)
+        private void RenderWarnings(int vx, int vy, int vw, int vh, WarningEffect? specificWarning = null)
         {
             var list = new List<GameObject>();
-            if (_logic.State1.Warning.IsActive) list.Add(_logic.State1.Warning);
-            if (_logic.State2.Warning.IsActive) list.Add(_logic.State2.Warning);
+            if (specificWarning != null)
+            {
+                if (specificWarning.IsActive) list.Add(specificWarning);
+            }
+            else
+            {
+                if (_logic.State1.Warning.IsActive) list.Add(_logic.State1.Warning);
+                if (_logic.State2.Warning.IsActive) list.Add(_logic.State2.Warning);
+            }
             if (list.Count > 0)
                 _renderer.Render(list, vx, vy, vw, vh);
         }
 
         private void RenderBonusPickups(
-            PlayerState state, float screenY, float screenWidth,
+            PlayerState state, float screenY, float avgWorldX, float screenWidth,
             int vx, int vy, int vw, int vh)
         {
             float pScrX = screenWidth * GameLogic.PlayerScreenAnchorX;
@@ -363,7 +372,7 @@ namespace SBR_Game
             foreach (var pickup in state.BonusPickups)
             {
                 if (pickup.IsCollected) continue;
-                float sx = pScrX + (pickup.WorldX - state.Player.WorldX);
+                float sx = pScrX + (pickup.WorldX - avgWorldX);
                 pickup.Position = new Vector2(sx, screenY + pickup.BobOffset);
                 list.Add(pickup);
             }

@@ -19,7 +19,7 @@ namespace SBR_Game
         public const float ObstacleMinSpawnDist = 3500f;
         public const float ObstacleMaxSpawnDist = 5500f;
         public const float ObstacleDespawnOffset = 200f;
-        public const float WarningDistance = 1500f;
+        public const float WarningDistance = 2000f;
         public const float WarningDuration = 0.5f;
         public const float PlayerBaseWidth = 200f;
         public const float PlayerBaseHeight = 250f;
