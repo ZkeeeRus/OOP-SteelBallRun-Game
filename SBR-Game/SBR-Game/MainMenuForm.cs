@@ -1,8 +1,9 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Resources;
 using System.Windows.Forms;
 
-namespace SBR_Game.UI
+namespace SBR_Game
 {
     public class MainMenuForm : Form
     {
@@ -15,6 +16,8 @@ namespace SBR_Game.UI
 
         public MainMenuForm()
         {
+            InitializeComponent();
+
             Text = "Steel Ball Run";
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
@@ -111,9 +114,6 @@ namespace SBR_Game.UI
             // 
             // MainMenuForm
             // 
-            ClientSize = new Size(284, 261);
-            Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "MainMenuForm";
             ResumeLayout(false);
 
         }

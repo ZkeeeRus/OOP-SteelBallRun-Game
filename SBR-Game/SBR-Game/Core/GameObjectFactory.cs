@@ -34,9 +34,7 @@ namespace SBR_Game.Core
                 Height = height
             };
 
-        public GameObject CreateSprite(
-            string textureName, float x, float y, float width, float height,
-            ScaleMode scaleMode = ScaleMode.Stretch)
+        public GameObject CreateSprite(string textureName, float x, float y, float width, float height, ScaleMode scaleMode = ScaleMode.Stretch)
             => new GameObject(LoadTexture(Path.Combine("Images", textureName)))
             {
                 Position = new Vector2(x, y),
@@ -65,7 +63,7 @@ namespace SBR_Game.Core
                 Height = size
             };
 
-        public BonusPickup CreateBonusPickup(BonusDefinition def, float worldX)
+        public BonusPickup CreateBonusPickup(BonusDefinition def, float worldX, float size)
         {
             var iconTex = TryLoadCached(def.IconPath);
             if (iconTex == null)
@@ -77,8 +75,8 @@ namespace SBR_Game.Core
             {
                 WorldX = worldX,
                 Position = new Vector2(worldX, 0),
-                Width = 120f,
-                Height = 120f,
+                Width = size,
+                Height = size,
                 EffectSprite = effectTex
             };
         }

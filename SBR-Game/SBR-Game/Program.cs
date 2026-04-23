@@ -1,5 +1,3 @@
-using SBR_Game.UI;
-
 namespace SBR_Game
 {
     internal static class Program

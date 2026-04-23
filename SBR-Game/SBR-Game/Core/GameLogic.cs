@@ -54,8 +54,7 @@ namespace SBR_Game
         public GameLogic(GameObjectFactory factory) => _factory = factory;
 
 
-        public void Init(Player player1, Player player2,
-                         WarningEffect warning1, WarningEffect warning2)
+        public void Init(Player player1, Player player2, WarningEffect warning1, WarningEffect warning2)
         {
             State1 = new PlayerState(player1, warning1, ObstacleMinSpawnDist);
             State2 = new PlayerState(player2, warning2, ObstacleMinSpawnDist);
@@ -200,7 +199,7 @@ namespace SBR_Game
             float worldX = state.Player.WorldX + dist;
 
             var def = BonusRegistry.All[Random.Shared.Next(BonusRegistry.All.Count)];
-            var pickup = _factory.CreateBonusPickup(def, worldX);
+            var pickup = _factory.CreateBonusPickup(def, worldX, 200f);
             state.BonusPickups.Add(pickup);
         }
 

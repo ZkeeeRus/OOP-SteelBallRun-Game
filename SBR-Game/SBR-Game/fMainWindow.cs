@@ -5,8 +5,8 @@ using SBR_Game.Core;
 using SBR_Game.Gameplay;
 using SBR_Game.Gameplay.Bonuses;
 using SBR_Game.Rendering;
+using SBR_Game.Rendering.UI;
 using SBR_Game.States;
-using SBR_Game.UI;
 using System.Runtime.InteropServices;
 
 namespace SBR_Game
@@ -59,6 +59,8 @@ namespace SBR_Game
 
             _renderer.Initialize();
             _debug.Initialize();
+            _hud.Initialize();
+            _finishUI.Initialize();
             _renderer.SetScreenSize(glControl.Width, glControl.Height);
 
             string content = Path.Combine(AppContext.BaseDirectory, "Content");
@@ -105,8 +107,8 @@ namespace SBR_Game
                 W * GameLogic.PlayerScreenAnchorX, H * GameLogic.LaneBottomY, pw, ph);
             p2.Animator = new PlayerAnimator(_p2Sprites) { AnimationFPS = GameLogic.AnimationFPS };
 
-            var w1 = _factory.CreateWarning(0, 0, 40f);
-            var w2 = _factory.CreateWarning(0, 0, 40f);
+            var w1 = _factory.CreateWarning(0, 0, 70f);
+            var w2 = _factory.CreateWarning(0, 0, 70f);
 
             _logic = new GameLogic(_factory);
             _logic.Init(p1, p2, w1, w2);
@@ -220,7 +222,7 @@ namespace SBR_Game
         {
             if (_phase == GamePhase.Playing || _phase == GamePhase.RaceFinished)
             {
-                _hud.Draw(_debug, W, H,
+                _hud.Draw(W, H,
                     _logic.State1.Distance, _logic.State1.Score,
                     _logic.State2.Distance, _logic.State2.Score,
                     GameLogic.RaceGoalDistance);
@@ -238,7 +240,7 @@ namespace SBR_Game
 
             if (_phase == GamePhase.RaceFinished)
             {
-                _finishUI.Draw(_debug, W, H,
+                _finishUI.Draw(W, H,
                     _logic.State1.Distance, _logic.State1.Score,
                     _logic.State2.Distance, _logic.State2.Score);
             }
@@ -328,16 +330,13 @@ namespace SBR_Game
                     playerScreenY);
         }
 
-        private static void SetWarningPosition(
-            WarningEffect warning, float playerScreenX, float playerScreenY, float screenWidth)
+        private static void SetWarningPosition(WarningEffect warning, float playerScreenX, float playerScreenY, float screenWidth)
         {
             if (!warning.IsActive) return;
             warning.Position = new Vector2(screenWidth - 60f, playerScreenY);
         }
 
-        private void RenderObstacles(
-            List<Obstacle> obstacles,
-            int vx = 0, int vy = 0, int vw = 0, int vh = 0)
+        private void RenderObstacles(List<Obstacle> obstacles, int vx = 0, int vy = 0, int vw = 0, int vh = 0)
         {
             var list = obstacles.Cast<GameObject>().ToList();
             if (vw > 0 && vh > 0)
@@ -362,9 +361,7 @@ namespace SBR_Game
                 _renderer.Render(list, vx, vy, vw, vh);
         }
 
-        private void RenderBonusPickups(
-            PlayerState state, float screenY, float avgWorldX, float screenWidth,
-            int vx, int vy, int vw, int vh)
+        private void RenderBonusPickups(PlayerState state, float screenY, float avgWorldX, float screenWidth, int vx, int vy, int vw, int vh)
         {
             float pScrX = screenWidth * GameLogic.PlayerScreenAnchorX;
             var list = new List<GameObject>();
@@ -381,9 +378,7 @@ namespace SBR_Game
                 _renderer.Render(list, vx, vy, vw, vh);
         }
 
-        private void RenderBonusEffects(
-            PlayerState state, Vector2 playerScreenPos,
-            int vx, int vy, int vw, int vh)
+        private void RenderBonusEffects(PlayerState state, Vector2 playerScreenPos, int vx, int vy, int vw, int vh)
         {
             var list = new List<GameObject>();
 
@@ -437,6 +432,8 @@ namespace SBR_Game
 
             _renderer.Dispose();
             _debug.Dispose();
+            _hud.Dispose();
+            _finishUI.Dispose();
             _scrollingBg?.Dispose();
             _factory?.Dispose();
             _p1Sprites?.Dispose();

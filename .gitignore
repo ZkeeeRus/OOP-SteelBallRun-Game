@@ -1,7 +1,14 @@
+
 .vs/
+.vscode/
+.git/
+SBR-Game/.vs/
 
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 [Bb]in/
+
+SBR-Game/.vs/SBR-Game/v17/.suo
+SBR-Game/.vs/SBR-Game/v17/DocumentLayout.json
