@@ -8,6 +8,7 @@ namespace SBR_Game.Gameplay
         public int Level { get; }
         public float SlowdownFactor { get; }
         public float WorldX { get; set; }
+        public float WorldYOffset { get; set; }
 
         public Obstacle(Texture2D texture, int level) : base(texture)
         {
@@ -22,6 +23,22 @@ namespace SBR_Game.Gameplay
     public class Bush : Obstacle
     {
         public Bush(Texture2D texture, int level) : base(texture, level)
+        {
+            ScaleMode = ScaleMode.KeepAspectRatio;
+        }
+    }
+
+    public class Barrier : Obstacle
+    {
+        public Barrier(Texture2D texture, int level) : base(texture, level)
+        {
+            ScaleMode = ScaleMode.KeepAspectRatio;
+        }
+    }
+
+    public class Lake : Obstacle
+    {
+        public Lake(Texture2D texture, int level) : base(texture, level)
         {
             ScaleMode = ScaleMode.Stretch;
         }

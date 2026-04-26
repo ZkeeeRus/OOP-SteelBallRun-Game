@@ -100,12 +100,12 @@ namespace SBR_Game
             var p1 = _factory.CreatePlayer(
                 Path.Combine("Images", "Players", "Player1", "p1_stand.png"),
                 W * GameLogic.PlayerScreenAnchorX, H * GameLogic.LaneTopY, pw, ph);
-            p1.Animator = new PlayerAnimator(_p1Sprites) { AnimationFPS = GameLogic.AnimationFPS };
+            p1.Animator = new PlayerAnimator(_p1Sprites);
 
             var p2 = _factory.CreatePlayer(
                 Path.Combine("Images", "Players", "Player2", "p2_stand.png"),
                 W * GameLogic.PlayerScreenAnchorX, H * GameLogic.LaneBottomY, pw, ph);
-            p2.Animator = new PlayerAnimator(_p2Sprites) { AnimationFPS = GameLogic.AnimationFPS };
+            p2.Animator = new PlayerAnimator(_p2Sprites);
 
             var w1 = _factory.CreateWarning(0, 0, 70f);
             var w2 = _factory.CreateWarning(0, 0, 70f);
@@ -327,7 +327,7 @@ namespace SBR_Game
             foreach (var obs in state.Obstacles)
                 obs.Position = new Vector2(
                     pScrX + (obs.WorldX - avgWorldX),
-                    playerScreenY);
+                    playerScreenY + obs.WorldYOffset);
         }
 
         private static void SetWarningPosition(WarningEffect warning, float playerScreenX, float playerScreenY, float screenWidth)

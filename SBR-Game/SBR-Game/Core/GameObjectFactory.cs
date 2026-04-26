@@ -9,6 +9,8 @@ namespace SBR_Game.Core
     {
         private readonly string _contentPath;
         private readonly Texture2D[] _bushTextures = new Texture2D[3];
+        private readonly Texture2D[] _barrierTextures = new Texture2D[3];
+        private readonly Texture2D[] _lakeTextures = new Texture2D[3];
 
         private readonly Dictionary<string, Texture2D> _textureCache = new();
 
@@ -22,6 +24,22 @@ namespace SBR_Game.Core
                 if (!File.Exists(path))
                     throw new FileNotFoundException($"Bush texture not found: {path}");
                 _bushTextures[i] = Texture2D.LoadFromFile(path);
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                string path = Path.Combine(contentPath, "Images", "Barriers", $"Barrier_{i + 1}.png");
+                if (!File.Exists(path))
+                    throw new FileNotFoundException($"Barrier texture not found: {path}");
+                _barrierTextures[i] = Texture2D.LoadFromFile(path);
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                string path = Path.Combine(contentPath, "Images", "Lakes", $"Lake_{i + 1}.png");
+                if (!File.Exists(path))
+                    throw new FileNotFoundException($"Lake texture not found: {path}");
+                _lakeTextures[i] = Texture2D.LoadFromFile(path);
             }
         }
 
@@ -43,12 +61,39 @@ namespace SBR_Game.Core
                 ScaleMode = scaleMode
             };
 
-        public Bush CreateBush(int level, float worldX, float y, float width, float height)
+        public Bush CreateBush(int level, float worldX, float y, float width, float height, float yOffset = 0)
         {
             int index = Math.Clamp(level - 1, 0, 2);
             return new Bush(_bushTextures[index], level)
             {
                 WorldX = worldX,
+                WorldYOffset = yOffset,
+                Position = new Vector2(worldX, y),
+                Width = width,
+                Height = height
+            };
+        }
+
+        public Gameplay.Barrier CreateBarrier(int level, float worldX, float y, float width, float height, float yOffset = 0)
+        {
+            int index = Math.Clamp(level - 1, 0, 2);
+            return new Gameplay.Barrier(_barrierTextures[index], level)
+            {
+                WorldX = worldX,
+                WorldYOffset = yOffset,
+                Position = new Vector2(worldX, y),
+                Width = width,
+                Height = height
+            };
+        }
+
+        public Lake CreateLake(int level, float worldX, float y, float width, float height, float yOffset = 0)
+        {
+            int index = Math.Clamp(level - 1, 0, 2);
+            return new Lake(_lakeTextures[index], level)
+            {
+                WorldX = worldX,
+                WorldYOffset = yOffset,
                 Position = new Vector2(worldX, y),
                 Width = width,
                 Height = height

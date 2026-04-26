@@ -53,7 +53,6 @@ namespace SBR_Game
 
         public GameLogic(GameObjectFactory factory) => _factory = factory;
 
-
         public void Init(Player player1, Player player2, WarningEffect warning1, WarningEffect warning2)
         {
             State1 = new PlayerState(player1, warning1, ObstacleMinSpawnDist);
@@ -149,11 +148,15 @@ namespace SBR_Game
 
             float worldX = state.Player.WorldX + dist;
             int level = Random.Shared.Next(1, 4);
-            float scale = 0.8f + Random.Shared.NextSingle() * 0.4f;
+            int type = Random.Shared.Next(1, 4);
 
-            var obs = _factory.CreateBush(level, worldX, 0,
-                PlayerBaseWidth * scale,
-                PlayerBaseHeight * scale * 0.6f);
+            Obstacle obs = type switch
+            {
+                1 => obs = _factory.CreateBush(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.6f),
+                2 => obs = _factory.CreateBarrier(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.7f, -25),
+                3 => obs = _factory.CreateLake(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.6f, -75)
+            };
+
 
             state.Obstacles.Add(obs);
             state.NextObstacleWorldX = worldX;
@@ -173,7 +176,7 @@ namespace SBR_Game
 
             for (int i = state.BonusPickups.Count - 1; i >= 0; i--)
             {
-                var b = state.BonusPickups[i];
+                BonusPickup b = state.BonusPickups[i];
                 if (b.IsCollected ||
                     ScreenX(b.WorldX, state, screenWidth) < -ObstacleDespawnOffset)
                 {
@@ -198,8 +201,8 @@ namespace SBR_Game
                          + Random.Shared.NextSingle() * (BonusMaxSpawnDist - BonusMinSpawnDist);
             float worldX = state.Player.WorldX + dist;
 
-            var def = BonusRegistry.All[Random.Shared.Next(BonusRegistry.All.Count)];
-            var pickup = _factory.CreateBonusPickup(def, worldX, 200f);
+            BonusDefinition def = BonusRegistry.All[Random.Shared.Next(BonusRegistry.All.Count)];
+            BonusPickup pickup = _factory.CreateBonusPickup(def, worldX, 200f);
             state.BonusPickups.Add(pickup);
         }
 
@@ -210,7 +213,7 @@ namespace SBR_Game
             float pX = state.Player.WorldX;
             float pJumpOffset = state.Player.JumpYOffset;
 
-            foreach (var pickup in state.BonusPickups)
+            foreach (BonusPickup pickup in state.BonusPickups)
             {
                 if (pickup.IsCollected) continue;
 
@@ -236,7 +239,7 @@ namespace SBR_Game
             float pLeft = state.Player.WorldX - state.Player.Width * 0.20f;
             float pRight = state.Player.WorldX + state.Player.Width * 0.20f;
 
-            foreach (var obs in state.Obstacles)
+            foreach (Obstacle obs in state.Obstacles)
             {
                 if (obs.WorldX < pLeft - obs.Width * 0.5f) continue;
                 if (obs.WorldX > pRight + obs.Width * 0.5f) continue;
@@ -256,7 +259,7 @@ namespace SBR_Game
             Obstacle? closest = null;
             float closestDist = float.MaxValue;
 
-            foreach (var obs in state.Obstacles)
+            foreach (Obstacle obs in state.Obstacles)
             {
                 float d = obs.WorldX - state.Player.WorldX;
                 if (d > 0 && d < closestDist) { closestDist = d; closest = obs; }

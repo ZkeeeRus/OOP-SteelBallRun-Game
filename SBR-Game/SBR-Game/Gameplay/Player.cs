@@ -39,7 +39,6 @@ namespace SBR_Game.Gameplay
         private float _animTimer;
         private int _currentFrame;
 
-        public float AnimationFPS { get; set; } = 12f;
         public Texture2D CurrentTexture { get; private set; }
 
         public PlayerAnimator(PlayerSprites sprites)
@@ -69,7 +68,13 @@ namespace SBR_Game.Gameplay
             }
 
             _animTimer += deltaTime;
-            float interval = 1f / AnimationFPS;
+
+            float baseInterval = 1f / GameLogic.AnimationFPS;
+            float speedFactor = speed / GameLogic.MaxSpeed;
+            speedFactor = Math.Max(0.3f, Math.Min(1.5f, speedFactor)); 
+            float interval = baseInterval / speedFactor;
+
+
             if (_animTimer >= interval)
             {
                 _animTimer = 0f;
