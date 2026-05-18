@@ -58,6 +58,8 @@ namespace SBR_Game.Rendering.UI
 
         public bool IsFullyShown => _pendingEntries.Count == 0 && _initialized;
 
+        public Action<int>? OnLoserPlaceDecided { get; set; }
+
         public void Initialize() => _textRenderer.Initialize();
 
         public void Draw(float screenWidth, float screenHeight, float p1Distance, int p1Score, float p2Distance, int p2Score, int winnerSlot, float dt)
@@ -136,6 +138,7 @@ namespace SBR_Game.Rendering.UI
             }
 
             _nextEntryTimer = 0.2f;
+            OnLoserPlaceDecided?.Invoke(LoserFinalPlace);
         }
 
         private void RenderTable(int W, int H)

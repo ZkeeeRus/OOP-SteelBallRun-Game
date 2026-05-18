@@ -144,6 +144,17 @@ namespace SBR_Game
                 FinishSpriteWidth, FinishSpriteHeight);
 
             _finishUI.Reset();
+
+            _finishUI.OnLoserPlaceDecided = (loserPlace) =>
+            {
+                PlayerState loser = _logic.WinnerSlot == 1 ? _logic.State2 : _logic.State1;
+                loser.Score += loserPlace switch
+                {
+                    2 => GameLogic.ScoreFinish2nd,
+                    3 => GameLogic.ScoreFinish3rd,
+                    _ => 0 
+                };
+            };
         }
 
 

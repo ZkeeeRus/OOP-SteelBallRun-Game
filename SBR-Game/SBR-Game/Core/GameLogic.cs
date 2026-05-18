@@ -34,11 +34,21 @@ namespace SBR_Game
         public const float FinishMusicTriggerDistance = 199_000f;
         public const float JumpDuration = 0.55f;
 
+        public const int ScoreFinish1st = 2000;
+        public const int ScoreFinish2nd = 1000;
+        public const int ScoreFinish3rd = 500;
+
+        private const int ScoreBonusPickup = 150;
+        private const int ScoreDodge = 50;
+        private const int ScoreObstacleHit = -100;
+
         public const float LaggardTeleportDistance = 3_000f;
 
         private const float BonusMinSpawnDist = 4000f;
         private const float BonusMaxSpawnDist = 8000f;
         public const float BonusLaneYOffset = 130f;
+
+
 
         private static float SlowdownForLevel(int level) => 1f - 0.15f * level;
 
@@ -225,8 +235,16 @@ namespace SBR_Game
         private static void DespawnPassedObstacles(PlayerState state, int screenWidth)
         {
             for (int i = state.Obstacles.Count - 1; i >= 0; i--)
-                if (ScreenX(state.Obstacles[i].WorldX, state, screenWidth) < -ObstacleDespawnOffset)
+            {
+                Obstacle obs = state.Obstacles[i];
+                if (ScreenX(obs.WorldX, state, screenWidth) < -ObstacleDespawnOffset)
+                {
+                    if (!obs.WasHit)
+                        state.Score += ScoreDodge;
+
                     state.Obstacles.RemoveAt(i);
+                }
+            }
         }
 
 
@@ -286,6 +304,8 @@ namespace SBR_Game
                 state.ActiveBonuses.Add(
                     new BonusModifier(pickup.Definition, pickup.EffectSprite));
 
+                state.Score += ScoreBonusPickup;
+
                 Instance.OnBonusPickup?.Invoke();
             }
         }
@@ -307,9 +327,14 @@ namespace SBR_Game
                 float overlap = pRight - (obs.WorldX - obs.Width * 0.5f);
                 if (overlap <= 0f) continue;
 
-                state.OnObstacleHit?.Invoke();
-                state.Player.ApplySlowdown(SlowdownForLevel(obs.Level), MinSpeed);
-                state.Player.TriggerHitFlash();
+                if (!obs.WasHit)
+                {
+                    obs.WasHit = true;
+                    state.Score = Math.Max(0, state.Score + ScoreObstacleHit);
+                    state.OnObstacleHit?.Invoke();
+                    state.Player.ApplySlowdown(SlowdownForLevel(obs.Level), MinSpeed);
+                    state.Player.TriggerHitFlash();
+                }
                 break;
             }
         }
@@ -396,6 +421,8 @@ namespace SBR_Game
                 else
                     WinnerSlot = p1CrossedLine ? 1 : 2;
 
+                PlayerState winner = WinnerSlot == 1 ? State1 : State2;
+                winner.Score += ScoreFinish1st;
             }
         }
 

@@ -9,6 +9,7 @@ namespace SBR_Game.Gameplay
         public float SlowdownFactor { get; }
         public float WorldX { get; set; }
         public float WorldYOffset { get; set; }
+        public bool WasHit { get; set; }
 
         public Obstacle(Texture2D texture, int level) : base(texture)
         {
