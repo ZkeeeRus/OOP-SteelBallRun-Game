@@ -10,5 +10,9 @@ SBR-Game/.vs/
 [Rr]eleases/
 [Bb]in/
 
+v17/
+
 SBR-Game/.vs/SBR-Game/v17/.suo
 SBR-Game/.vs/SBR-Game/v17/DocumentLayout.json
+
+.editorconfig
