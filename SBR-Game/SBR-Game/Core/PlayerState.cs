@@ -18,6 +18,7 @@ namespace SBR_Game.Core
 
         public List<IPlayerModifier> ActiveBonuses { get; } = new();
         public List<BonusPickup> BonusPickups { get; } = new();
+        public Action? OnObstacleHit { get; set; }
 
         public float EffectiveMaxSpeed(float baseMax)
         {

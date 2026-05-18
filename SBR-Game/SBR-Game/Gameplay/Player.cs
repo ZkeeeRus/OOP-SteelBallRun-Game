@@ -40,17 +40,21 @@ namespace SBR_Game.Gameplay
         private int _currentFrame;
 
         public Texture2D CurrentTexture { get; private set; }
+        public bool CurrentFrameChanged { get; private set; }
 
         public PlayerAnimator(PlayerSprites sprites)
         {
             _sprites = sprites;
             CurrentTexture = sprites.Stand;
+            CurrentFrameChanged = false;
         }
 
         public Texture2D GetStandSprite() => _sprites.Stand;
 
         public void Update(float deltaTime, float speed, bool jumping)
         {
+            CurrentFrameChanged = false;
+
             if (jumping)
             {
                 CurrentTexture = _sprites.Jump;
@@ -85,6 +89,8 @@ namespace SBR_Game.Gameplay
                     1 => _sprites.Run2,
                     _ => _sprites.Run3
                 };
+                if(_currentFrame % 3 == 0)
+                    CurrentFrameChanged = true;
             }
         }
     }
@@ -107,6 +113,11 @@ namespace SBR_Game.Gameplay
         public bool IsInvincible => IsJumping || _hitFlashTimer > 0f;
 
         public PlayerAnimator? Animator { get; set; }
+
+
+        private float _hoofstepTimer;
+        private int _lastHoofstepFrame = -1;
+        public Action? OnHoofstep { get; set; }
 
         public Player(Texture2D texture) : base(texture)
         {
@@ -136,7 +147,7 @@ namespace SBR_Game.Gameplay
         }
 
 
-        public const float JumpPeakPixels = 120f; // how high to rise in screen pixels
+        public const float JumpPeakPixels = 120f;
 
         public void UpdateAnimation(float dt)
         {
@@ -179,7 +190,15 @@ namespace SBR_Game.Gameplay
 
             Color = Color.White;
             Animator?.Update(dt, Speed, IsJumping);
-            if (Animator != null) Texture = Animator.CurrentTexture;
+            if (Animator != null)
+            {
+                Texture = Animator.CurrentTexture;
+
+                if (!IsJumping && Speed > 0 && Animator.CurrentFrameChanged)
+                {
+                    OnHoofstep?.Invoke();
+                }
+            }
         }
     }
 }

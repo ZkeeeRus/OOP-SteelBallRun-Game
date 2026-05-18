@@ -1,3 +1,4 @@
+
 using SBR_Game.Core;
 using SBR_Game.Gameplay;
 using SBR_Game.Gameplay.Bonuses;
@@ -29,8 +30,11 @@ namespace SBR_Game
         public const float SplitLaneTopY = 0.25f;
         public const float SplitLaneBottomY = 0.25f;
         public const float StartDelay = 3f;
-        public const float RaceGoalDistance = 100_000f;
+        public const float RaceGoalDistance = 200_000f;
+        public const float FinishMusicTriggerDistance = 199_000f;
         public const float JumpDuration = 0.55f;
+
+        public const float LaggardTeleportDistance = 3_000f;
 
         private const float BonusMinSpawnDist = 4000f;
         private const float BonusMaxSpawnDist = 8000f;
@@ -40,24 +44,51 @@ namespace SBR_Game
 
         public PlayerState State1 { get; private set; } = null!;
         public PlayerState State2 { get; private set; } = null!;
-        public bool RaceFinished { get; private set; }
+
+        public bool FirstFinished { get; private set; }
         public int WinnerSlot { get; private set; }
+        public bool BothOffScreen { get; private set; }
+
         public bool CountingDown => _startTimer > 0f;
         public float CountdownTime => _startTimer;
+        public bool ShouldPlayFinishMusic => _shouldPlayFinishMusic;
+
+        public float FrozenCameraWorldX { get; private set; }
 
         private float _startTimer;
         private bool _w_wasUp = true;
         private bool _up_wasUp = true;
+        private bool _shouldPlayFinishMusic = false;
+        private int _lastScreenWidth = 1280;
+
+        private bool _p1OffScreen = false;
+        private bool _p2OffScreen = false;
+        private bool _laggardTeleported = false;
 
         private readonly GameObjectFactory _factory;
+        public Action? OnFinishMusicTriggered { get; set; }
 
-        public GameLogic(GameObjectFactory factory) => _factory = factory;
+        private static GameLogic _instance = null!;
+        public static GameLogic Instance => _instance;
+
+        public GameLogic(GameObjectFactory factory)
+        {
+            _instance = this;
+            _factory = factory;
+        }
 
         public void Init(Player player1, Player player2, WarningEffect warning1, WarningEffect warning2)
         {
             State1 = new PlayerState(player1, warning1, ObstacleMinSpawnDist);
             State2 = new PlayerState(player2, warning2, ObstacleMinSpawnDist);
-            RaceFinished = false;
+            FirstFinished = false;
+            BothOffScreen = false;
+            WinnerSlot = 0;
+            FrozenCameraWorldX = 0f;
+            _p1OffScreen = false;
+            _p2OffScreen = false;
+            _laggardTeleported = false;
+            _shouldPlayFinishMusic = false;
             _startTimer = StartDelay;
             _w_wasUp = true;
             _up_wasUp = true;
@@ -68,7 +99,8 @@ namespace SBR_Game
 
         public void Update(float dt, int screenWidth)
         {
-            if (RaceFinished) return;
+            if (BothOffScreen) return;
+            _lastScreenWidth = screenWidth;
 
             if (_startTimer > 0f)
             {
@@ -76,20 +108,40 @@ namespace SBR_Game
                 return;
             }
 
-            HandleInput(dt);
-            UpdatePlayer(State1, dt);
-            UpdatePlayer(State2, dt);
-            UpdateObstacles(State1, dt, screenWidth);
-            UpdateObstacles(State2, dt, screenWidth);
-            UpdateBonuses(State1, dt, screenWidth);
-            UpdateBonuses(State2, dt, screenWidth);
-            CheckCollisions(State1);
-            CheckCollisions(State2);
-            CheckBonusPickups(State1);
-            CheckBonusPickups(State2);
-            UpdateWarning(State1, dt);
-            UpdateWarning(State2, dt);
-            CheckRaceFinished();
+            if (!FirstFinished)
+            {
+                // Обычная игра с управлением
+                HandleInput(dt);
+                UpdatePlayer(State1, dt);
+                UpdatePlayer(State2, dt);
+                UpdateObstacles(State1, dt, screenWidth);
+                UpdateObstacles(State2, dt, screenWidth);
+                UpdateBonuses(State1, dt, screenWidth);
+                UpdateBonuses(State2, dt, screenWidth);
+                CheckCollisions(State1);
+                CheckCollisions(State2);
+                CheckBonusPickups(State1);
+                CheckBonusPickups(State2);
+                UpdateWarning(State1, dt);
+                UpdateWarning(State2, dt);
+                CheckFinishMusicTrigger();
+                CheckFirstFinish(screenWidth);
+            }
+            else
+            {
+                // автопилот финала
+                UpdateAutopilotPlayer(State1, dt);
+                UpdateAutopilotPlayer(State2, dt);
+                TryTeleportLaggard();
+                State1.Player.UpdateAnimation(dt);
+                State2.Player.UpdateAnimation(dt);
+                CheckPlayersOffScreen(screenWidth);
+            }
+
+            if (State1.Player.Animator?.CurrentFrameChanged == true && !State1.Player.IsJumping && State1.Player.Speed > 0)
+                OnHoofstepP1?.Invoke();
+            if (State2.Player.Animator?.CurrentFrameChanged == true && !State2.Player.IsJumping && State2.Player.Speed > 0)
+                OnHoofstepP2?.Invoke();
         }
 
 
@@ -127,6 +179,12 @@ namespace SBR_Game
             }
         }
 
+        private static void UpdateAutopilotPlayer(PlayerState state, float dt)
+        {
+            state.Player.Speed = MaxSpeed;
+            state.Player.Advance(dt);
+        }
+
 
         private void UpdateObstacles(PlayerState state, float dt, int screenWidth)
         {
@@ -136,6 +194,8 @@ namespace SBR_Game
 
         private void SpawnObstacleIfNeeded(PlayerState state, int screenWidth)
         {
+            if (FirstFinished) return;
+
             bool hasAhead = state.Obstacles.Any(
                 o => o.WorldX > state.Player.WorldX &&
                      ScreenX(o.WorldX, state, screenWidth) > -ObstacleDespawnOffset);
@@ -152,11 +212,11 @@ namespace SBR_Game
 
             Obstacle obs = type switch
             {
-                1 => obs = _factory.CreateBush(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.6f),
-                2 => obs = _factory.CreateBarrier(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.7f, -25),
-                3 => obs = _factory.CreateLake(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.6f, -75)
+                1 => _factory.CreateBush(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.6f),
+                2 => _factory.CreateBarrier(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.7f, -25),
+                3 => _factory.CreateLake(level, worldX, 0, 300f, 320f, -65),
+                _ => _factory.CreateBush(level, worldX, 0, PlayerBaseWidth, PlayerBaseHeight * 0.6f)
             };
-
 
             state.Obstacles.Add(obs);
             state.NextObstacleWorldX = worldX;
@@ -208,7 +268,7 @@ namespace SBR_Game
 
         private static void CheckBonusPickups(PlayerState state)
         {
-            if (!state.Player.IsJumping) return;   // must be airborne to collect
+            if (!state.Player.IsJumping) return;
 
             float pX = state.Player.WorldX;
             float pJumpOffset = state.Player.JumpYOffset;
@@ -217,21 +277,21 @@ namespace SBR_Game
             {
                 if (pickup.IsCollected) continue;
 
-                // X overlap (generous hitbox for pickups)
                 float dx = Math.Abs(pickup.WorldX - pX);
                 if (dx > pickup.Width * 0.8f) continue;
 
-                // Player must be high enough in their arc
                 if (pJumpOffset < Player.JumpPeakPixels * 0.3f) continue;
 
                 pickup.Collect();
                 state.ActiveBonuses.Add(
                     new BonusModifier(pickup.Definition, pickup.EffectSprite));
+
+                Instance.OnBonusPickup?.Invoke();
             }
         }
 
 
-        private static void CheckCollisions(PlayerState state)
+        private void CheckCollisions(PlayerState state)
         {
             if (state.Player.IsInvincible) return;
             if (state.HasBonusInvincibility) return;
@@ -247,11 +307,16 @@ namespace SBR_Game
                 float overlap = pRight - (obs.WorldX - obs.Width * 0.5f);
                 if (overlap <= 0f) continue;
 
+                state.OnObstacleHit?.Invoke();
                 state.Player.ApplySlowdown(SlowdownForLevel(obs.Level), MinSpeed);
                 state.Player.TriggerHitFlash();
                 break;
             }
         }
+
+        public Action? OnBonusPickup { get; set; }
+        public Action? OnHoofstepP1 { get; set; }
+        public Action? OnHoofstepP2 { get; set; }
 
 
         private static void UpdateWarning(PlayerState state, float dt)
@@ -294,21 +359,73 @@ namespace SBR_Game
             return screenWidth * PlayerScreenAnchorX + (worldX - state.Player.WorldX);
         }
 
-
-        private void CheckRaceFinished()
+        public float FrozenScreenX(float worldX, int screenWidth)
         {
-            if (!State1.HasFinished && State1.Player.WorldX >= RaceGoalDistance)
-                State1.FinalDistance = State1.Player.WorldX;
-            if (!State2.HasFinished && State2.Player.WorldX >= RaceGoalDistance)
-                State2.FinalDistance = State2.Player.WorldX;
+            return screenWidth * PlayerScreenAnchorX + (worldX - FrozenCameraWorldX);
+        }
 
-            if (!State1.HasFinished && !State2.HasFinished) return;
 
-            RaceFinished = true;
-            if (State1.HasFinished && State2.HasFinished)
-                WinnerSlot = State1.FinalDistance >= State2.FinalDistance ? 1 : 2;
-            else
-                WinnerSlot = State1.HasFinished ? 1 : 2;
+        private void CheckFinishMusicTrigger()
+        {
+            if (_shouldPlayFinishMusic) return;
+
+            if (State1.Player.WorldX >= FinishMusicTriggerDistance ||
+                State2.Player.WorldX >= FinishMusicTriggerDistance)
+            {
+                _shouldPlayFinishMusic = true;
+                OnFinishMusicTriggered?.Invoke();
+
+                FrozenCameraWorldX = RaceGoalDistance - _lastScreenWidth * PlayerScreenAnchorX;
+            }
+        }
+
+
+        private void CheckFirstFinish(int screenWidth)
+        {
+            bool p1CrossedLine = State1.Player.WorldX >= RaceGoalDistance;
+            bool p2CrossedLine = State2.Player.WorldX >= RaceGoalDistance;
+
+            if (!p1CrossedLine && !p2CrossedLine) return;
+
+            if (!FirstFinished)
+            {
+                FirstFinished = true;
+
+                if (p1CrossedLine && p2CrossedLine)
+                    WinnerSlot = State1.Player.WorldX >= State2.Player.WorldX ? 1 : 2;
+                else
+                    WinnerSlot = p1CrossedLine ? 1 : 2;
+
+            }
+        }
+
+        private void TryTeleportLaggard()
+        {
+            if (_laggardTeleported) return;
+
+            PlayerState laggard = WinnerSlot == 1 ? State2 : State1;
+            float distToFinish = RaceGoalDistance - laggard.Player.WorldX;
+
+            if (distToFinish > LaggardTeleportDistance)
+            {
+                laggard.Player.WorldX = RaceGoalDistance - LaggardTeleportDistance;
+                _laggardTeleported = true;
+            }
+        }
+
+        private void CheckPlayersOffScreen(int screenWidth)
+        {
+            float p1ScrX = FrozenScreenX(State1.Player.WorldX, screenWidth);
+            float p2ScrX = FrozenScreenX(State2.Player.WorldX, screenWidth);
+
+            if (!_p1OffScreen && p1ScrX > screenWidth + 150f)
+                _p1OffScreen = true;
+
+            if (!_p2OffScreen && p2ScrX > screenWidth + 150f)
+                _p2OffScreen = true;
+
+            if (_p1OffScreen && _p2OffScreen)
+                BothOffScreen = true;
         }
     }
 }

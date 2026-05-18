@@ -4,6 +4,7 @@ namespace SBR_Game.States
     {
         MainMenu,
         Playing,
+        PostFinish,
         RaceFinished
     }
 }

@@ -40,7 +40,7 @@ namespace SBR_Game.Gameplay
     {
         public Lake(Texture2D texture, int level) : base(texture, level)
         {
-            ScaleMode = ScaleMode.Stretch;
+            ScaleMode = ScaleMode.KeepAspectRatio;
         }
     }
 }

@@ -2,9 +2,9 @@
 {
     public class BonusDefinition
     {
-        public string Id { get; set; } = "";   // e.g. "speed_boost"
+        public string Id { get; set; } = "";
         public string DisplayName { get; set; } = "";
-        public string IconPath { get; set; } = "";   // relative to Content/
+        public string IconPath { get; set; } = "";
 
         public string EffectSpritePath { get; set; } = "";
 

@@ -9,6 +9,7 @@ namespace SBR_Game.Gameplay.Bonuses
         public bool IsCollected { get; private set; }
 
         public Texture2D? EffectSprite { get; set; }
+        public Action? OnCollectSound { get; set; }
 
         private float _bobTimer;
         private const float BobAmplitude = 6f;
@@ -24,6 +25,10 @@ namespace SBR_Game.Gameplay.Bonuses
 
         public void Update(float dt) => _bobTimer += dt;
 
-        public void Collect() => IsCollected = true;
+        public void Collect()
+        {
+            IsCollected = true;
+            OnCollectSound?.Invoke();
+        }
     }
 }

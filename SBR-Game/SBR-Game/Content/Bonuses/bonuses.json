@@ -23,7 +23,7 @@
         "Id": "max_speed_up",
         "DisplayName": "Max Speed Up",
         "IconPath": "Images/Bonuses/icon_maxspeed.png",
-        "EffectSpritePath": "",
+        "EffectSpritePath": "Images/Bonuses/effect_maxspeed.png",
         "Duration": 8.0,
         "MaxSpeedMultiplier": 1.6,
         "AccelerationMultiplier": 1.0,

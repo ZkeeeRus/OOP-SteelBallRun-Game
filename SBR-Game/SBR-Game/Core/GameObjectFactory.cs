@@ -11,6 +11,7 @@ namespace SBR_Game.Core
         private readonly Texture2D[] _bushTextures = new Texture2D[3];
         private readonly Texture2D[] _barrierTextures = new Texture2D[3];
         private readonly Texture2D[] _lakeTextures = new Texture2D[3];
+        private Texture2D? _finishTexture;
 
         private readonly Dictionary<string, Texture2D> _textureCache = new();
 
@@ -41,6 +42,10 @@ namespace SBR_Game.Core
                     throw new FileNotFoundException($"Lake texture not found: {path}");
                 _lakeTextures[i] = Texture2D.LoadFromFile(path);
             }
+
+            string finishPath = Path.Combine(contentPath, "Images", "Finish.png");
+            if (File.Exists(finishPath))
+                _finishTexture = Texture2D.LoadFromFile(finishPath);
         }
 
 
@@ -100,6 +105,18 @@ namespace SBR_Game.Core
             };
         }
 
+        public GameObject? CreateFinishSprite(float worldX, float screenY, float width, float height)
+        {
+            if (_finishTexture == null) return null;
+            return new GameObject(_finishTexture)
+            {
+                Position = new Vector2(worldX, screenY),
+                Width = width,
+                Height = height,
+                ScaleMode = ScaleMode.KeepAspectRatio
+            };
+        }
+
         public WarningEffect CreateWarning(float x, float y, float size)
             => new WarningEffect(LoadTexture(Path.Combine("Images", "Effects", "Warning.png")))
             {
@@ -156,6 +173,7 @@ namespace SBR_Game.Core
             _disposed = true;
             foreach (var t in _bushTextures) t?.Dispose();
             foreach (var t in _textureCache.Values) t.Dispose();
+            _finishTexture?.Dispose();
         }
     }
 }
